@@ -1,12 +1,11 @@
-import ActionsNavigation as actnav
+import Menus
 from ConsoleOutputStyle import SetStyle_MainTitle, SetStyle_Default
-from colorama import Fore, Back, Style
+from MenusBuilder import InitializeMenus
 
 APP_NAME = "Dungeon Master Companion"
-VERSION = "0.1"
+APP_VERSION = "0.1"
 
-
-actnav.Initialize()
+# APPLICATION FLOW STARTS HERE!
 
 SetStyle_MainTitle()
 print(f"""
@@ -14,11 +13,12 @@ print(f"""
       |                                    |
       |   Henlo!!! Welcome to the DMC!!!   |
       |____________________________________|
-      version: {VERSION}
+      version: {APP_VERSION}
       """
       )
 SetStyle_Default()
 
-print("Navigate menus by inputting the desired action index.")
+print("Navigate menus by inputting the desired option index.")
+InitializeMenus()
 while True:
-    actnav.AvailableActionSelection()
+    Menus.AvailableActionSelection()

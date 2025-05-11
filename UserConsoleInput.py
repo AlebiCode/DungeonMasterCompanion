@@ -1,61 +1,66 @@
+import re
 from ConsoleOutputStyle import SetStyle_InvalidInput, SetStyle_Default
 
 #Rules:
 #text surrounded by " " is treated as a whole word
 
-inputWords = []
+NEW_WORD_SEPARATOR = " ."
 
-def ObtainWordsFromInput(userInput: str) -> list:
-    strLen = len(userInput)
-    words = []
-    i = 0
-    while i < strLen:
-        #ignore white spaces
-        if userInput[i].isspace():
-            i += 1
-            continue
-        #text surrounded by " " is treated as a whole word
-        if userInput[i] == "\"":
-            j = i+1
-            validLiteralWord = False
-            while j < strLen:
-                if userInput[j] == "\"" and (j+1 == strLen or userInput[j+1].isspace()):
-                    words.append(userInput[i+1:j].strip() if j - i > 1 else "")
-                    validLiteralWord = True
-                    break
-                j += 1
-            if validLiteralWord == True:
-                i = j+1
-                continue
-        #get word normally
-        j = i+1
-        while j < strLen and not userInput[j].isspace():
-            j += 1
-        words.append(userInput[i:j])
-        i = j + 1
-    return words
+inputs = []
+
+def ObtainInputsFromString(userInput: str) -> list:
+    #return " ".join(userInput.split()).split(NEW_WORD_SEPARATOR) #no regex method
+    return re.sub(r'\s+', ' ', userInput).split(NEW_WORD_SEPARATOR)   #regex method
 
 def AskUserForInputIfNone():
-    global inputWords
-    if len(inputWords) == 0:
-        inputWords = ObtainWordsFromInput(input(">>> ").strip())
+    global inputs
+    if len(inputs) == 0:
+        inputs = ObtainInputsFromString(input(">>> "))
     #print(f"New Inputted Words: {inputWords}")
 
-def GetUserInputWord() -> str:
-    global inputWords
+def GetUserInput() -> str:
+    global inputs
     AskUserForInputIfNone()
-    return inputWords.pop(0)
-
-# def GetUserInputFull():
-#     global inputWords
-#     AskUserForInputIfNone()
-#     output = inputWords.copy()
-#     inputWords.clear()
-#     return output
+    return inputs.pop(0)
 
 def UserInputInvalid(reason: str):
-    global inputWords
+    global inputs
     SetStyle_InvalidInput()
     print(reason)
     SetStyle_Default()
-    inputWords.clear()
+    inputs.clear()
+    
+def GetFirstWord(string: str):
+    return string.split(maxsplit= 1)[0]
+    
+#OLD----------------------------------------------
+
+# def ObtainWordsFromInput(userInput: str) -> list:
+#     strLen = len(userInput)
+#     words = []
+#     i = 0
+#     while i < strLen:
+#         #ignore white spaces
+#         if userInput[i].isspace():
+#             i += 1
+#             continue
+#         #text surrounded by " " is treated as a whole word
+#         if userInput[i] == "\"":
+#             j = i+1
+#             validLiteralWord = False
+#             while j < strLen:
+#                 if userInput[j] == "\"" and (j+1 == strLen or userInput[j+1].isspace()):
+#                     words.append(userInput[i+1:j].strip() if j - i > 1 else "")
+#                     validLiteralWord = True
+#                     break
+#                 j += 1
+#             if validLiteralWord == True:
+#                 i = j+1
+#                 continue
+#         #get word normally
+#         j = i+1
+#         while j < strLen and not userInput[j].isspace():
+#             j += 1
+#         words.append(userInput[i:j])
+#         i = j + 1
+#     return words
