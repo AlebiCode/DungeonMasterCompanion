@@ -1,7 +1,7 @@
 # Builds the games menu navigation structure
-
 from Menus import MenuOption, Menu, SetGlobalMenuOptions, ChangeMenu
 from Combat import GenerateCombatMenu
+from ConsoleOutputStyle import STYLE_LESS_IMPORTANT
 
 menuSelectionMenu: Menu
 combatMenu: Menu
@@ -11,8 +11,8 @@ def InitializeMenus():
     combatMenu = GenerateCombatMenu()
     
     global menuSelectionMenu
-    showMenusActionsTouple = (MenuOption("Combat", lambda: ChangeMenu(combatMenu)), )
-    menuSelectionMenu = Menu("Menu Selection", showMenusActionsTouple, False)
+    showMenusActions = [MenuOption("Combat", lambda: ChangeMenu(combatMenu))]
+    menuSelectionMenu = Menu("Menu Selection", showMenusActions, False)
     
-    SetGlobalMenuOptions( (MenuOption("Change Menu", lambda: ChangeMenu(menuSelectionMenu)), ) )
+    SetGlobalMenuOptions( [MenuOption("Change Menu", lambda: ChangeMenu(menuSelectionMenu), STYLE_LESS_IMPORTANT), ] )
     ChangeMenu(menuSelectionMenu)

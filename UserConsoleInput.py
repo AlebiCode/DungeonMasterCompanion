@@ -16,12 +16,30 @@ def AskUserForInputIfNone():
     global inputs
     if len(inputs) == 0:
         inputs = ObtainInputsFromString(input(">>> "))
-    #print(f"New Inputted Words: {inputWords}")
+    #print(f"New Inputted Words: {inputs}")
 
-def GetUserInput() -> str:
-    global inputs
+def GetUserInput(optionalPrint: str = "") -> str:
+    if(optionalPrint != ""):
+        print(optionalPrint)
     AskUserForInputIfNone()
+    global inputs
     return inputs.pop(0)
+
+def GetUserInputIndex(optionalPrint: str = "") -> str:
+    userInput = GetFirstWordOfString(GetUserInput(optionalPrint))
+    if userInput.isdigit() == False:
+        return 0
+    return userInput
+
+def GetUserInputIndexes(optionalPrint: str = "", maxAmount = 999) -> str:
+    userInputWords = GetWordsOfString(GetUserInput(optionalPrint))
+    output: list[int] = []
+    for word in userInputWords:
+        if word.isdigit() == True:
+            output.append(int(word))
+            if(len(output) >= maxAmount):
+                break
+    return output
 
 def UserInputInvalid(reason: str):
     global inputs
@@ -30,9 +48,12 @@ def UserInputInvalid(reason: str):
     SetStyle_Default()
     inputs.clear()
     
-def GetFirstWord(string: str):
+def GetFirstWordOfString(string: str):
     return string.split(maxsplit= 1)[0]
     
+def GetWordsOfString(string: str):
+    return string.split()
+
 #OLD----------------------------------------------
 
 # def ObtainWordsFromInput(userInput: str) -> list:

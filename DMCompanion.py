@@ -6,7 +6,7 @@ APP_NAME = "Dungeon Master Companion"
 APP_VERSION = "0.1"
 
 # APPLICATION FLOW STARTS HERE!
-
+0
 SetStyle_MainTitle()
 print(f"""
        ____________________________________

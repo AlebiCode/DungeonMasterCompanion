@@ -1,33 +1,34 @@
 import UserConsoleInput as uci
-from ConsoleOutputStyle import SetStyle_LessImportant, SetStyle_Default
+from ConsoleOutputStyle import SetStyle
 
 MENU_ENTERED_HEADER = "\n------[ {0} ]------"
 
 class MenuOption:
-    def __init__(self, name: str, func, desc: str = ""):
+    def __init__(self, name: str, func, style: str = "", desc: str = ""):
         self.name = name
         self.func = func
+        self.style = style
         self.desc = desc
-        
+    
+    def __str__(self):
+        return self.name
+    
     def Execute(self):
         self.func()
 
 class Menu:
-    # def __init__(self, name, actions):
-    #     self.name = name
-    #     self.actions = actions
-    def __init__(self, name: str, options: tuple[MenuOption], showGlobalActions: bool = True):
+    def __init__(self, name: str, options: list[MenuOption], showGlobalActions: bool = True):
         self.name = name
         self.options = options
         self.showGlobalActions = showGlobalActions
         
-    def GetAvailableActionsFromMenu(self) -> tuple[MenuOption]:
+    def GetAvailableActionsFromMenu(self) -> list[MenuOption]:
         if(self.showGlobalActions):
             global globalOptions
             return globalOptions + self.options
         return self.options
 
-def SetGlobalMenuOptions(options: tuple[MenuOption]):
+def SetGlobalMenuOptions(options: list[MenuOption]):
     global globalOptions
     globalOptions = options
 
@@ -37,12 +38,10 @@ def PrintAvailableActions():
     global globalOptions
     global currentMenu
     global availableOptions
-    usedGlobalActionsLen = 0 if currentMenu.showGlobalActions == False else len(globalOptions)
-    if usedGlobalActionsLen > 0: SetStyle_LessImportant()
-    for action in availableOptions:
-        print(f"[{i}] {action.name}")
+    for option in availableOptions:
+        SetStyle(option.style)
+        print(f"[{i}] {option.name}")
         i += 1
-        if i == usedGlobalActionsLen: SetStyle_Default()
 
 def ChangeMenu(newMenu: Menu):
     global currentMenu
@@ -57,7 +56,7 @@ def ExecuteAvailableAction(index: int):
     
 def AvailableActionSelection():
     PrintAvailableActions()
-    actionSelection = uci.GetFirstWord(uci.GetUserInput())
+    actionSelection = uci.GetFirstWordOfString(uci.GetUserInput())
     if actionSelection.isdigit():
         index = int(actionSelection)
         global availableOptions
@@ -72,6 +71,6 @@ def AvailableActionSelection():
     uci.UserInputInvalid("No available choice found!")        
 
 
-globalOptions: tuple[MenuOption] = ()   # These can be called from any menu, unless the menu specifies that they are blocked.
+globalOptions: list[MenuOption] = []   # These can be called from any menu, unless the menu specifies that they are blocked.
 currentMenu: Menu = None      # Current menu
-availableOptions: tuple[MenuOption] = ()  # All currently available actions (globalActions if they are not blocked + menu options of current menu)
+availableOptions: list[MenuOption] = []  # All currently available actions (globalActions if they are not blocked + menu options of current menu)
