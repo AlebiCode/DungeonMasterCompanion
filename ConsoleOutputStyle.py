@@ -1,4 +1,4 @@
-from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style, init
 
 DEFAULT_STYLE_SYMBOL = ""
 
@@ -9,6 +9,7 @@ STYLE_MAIN_TITLE = Fore.GREEN + Style.BRIGHT
 
 currentStyle = ""
 
+init()
 
 def SetStyle(style: str):
     global currentStyle

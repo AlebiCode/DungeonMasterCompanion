@@ -10,7 +10,7 @@ inputs = []
 
 def ObtainInputsFromString(userInput: str) -> list:
     #return " ".join(userInput.split()).split(NEW_WORD_SEPARATOR) #no regex method
-    return re.sub(r'\s+', ' ', userInput).split(NEW_WORD_SEPARATOR)   #regex method
+    return re.sub(r'\s+', ' ', userInput.strip()).split(NEW_WORD_SEPARATOR)   #regex method
 
 def AskUserForInputIfNone():
     global inputs
@@ -29,7 +29,7 @@ def GetUserInputIndex(optionalPrint: str = "") -> str:
     userInput = GetFirstWordOfString(GetUserInput(optionalPrint))
     if userInput.isdigit() == False:
         return 0
-    return userInput
+    return int(userInput)
 
 def GetUserInputIndexes(optionalPrint: str = "", maxAmount = 999) -> str:
     userInputWords = GetWordsOfString(GetUserInput(optionalPrint))
@@ -41,6 +41,26 @@ def GetUserInputIndexes(optionalPrint: str = "", maxAmount = 999) -> str:
                 break
     return output
 
+def OptionSelection(options) -> int:
+    if len(options) == 0: return -1
+    for i in range(len(options)): print(f"[{i}] {str(options[i])}")
+    index = GetUserInputIndex()
+    if index < 0:
+        UserInputInvalid("No available choice found!")   
+        return -1
+    elif index >= len(options):
+        UserInputInvalid(f"\"{index}\" is out range!")
+        return -1
+    #TODO: POSSIBLE TO ADD ACTION NAME CHECK!!
+    return index
+
+def GetFirstWordOfString(string: str):
+    if len(string) == 0: return ""
+    return string.split(maxsplit= 1)[0]
+    
+def GetWordsOfString(string: str):
+    return string.split()
+
 def UserInputInvalid(reason: str):
     global inputs
     SetStyle_InvalidInput()
@@ -48,11 +68,6 @@ def UserInputInvalid(reason: str):
     SetStyle_Default()
     inputs.clear()
     
-def GetFirstWordOfString(string: str):
-    return string.split(maxsplit= 1)[0]
-    
-def GetWordsOfString(string: str):
-    return string.split()
 
 #OLD----------------------------------------------
 
